@@ -41,6 +41,7 @@ app.post('/merge_chunks',urlencodedParser, function (req, res, next) {
 				let filemap=filechunkpath.filter(item=>((item.reqid==obj.reqid)&&(item.filename==obj.name)));
 				let mergePromise = async.mapLimit(filemap, jargs.mclimit, function(item, callback){ mergechunk(item.chunkpath, item.chunkid,dest_path).then((resolve) => { callback(null, item); }); });
 				mergePromise.then((result) => { 
+					filechunkpath=filechunkpath.filter(item=>((item.reqid!=obj.reqid)||(item.filename!=obj.name)));
 					return res.json({ 'status': 1, 'filename': encodeURI(obj.name) });
 					}).catch(e =>{ console.log("merge fail"); return res.json({'status': 0, 'filename': ''}); });
 				}});
