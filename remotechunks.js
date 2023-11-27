@@ -30,7 +30,7 @@ function mergechunk(itemstr, targetFile){
 	let start = items[0] * jargs.chunkSize;
 	return new Promise((resolve,reject)=>{
 		pipeline( 
-			(items[1]==jargs.nodeid) ? fs.createReadStream(chunkpath) : got.stream(jargs.weburl[items[1]]+items[2]), 
+			(items[1]==jargs.nodeid) ? fs.createReadStream(jargs.chunkDir+items[2]) : got.stream(jargs.weburl[items[1]]+items[2]), 
 			fs.createWriteStream(targetFile, { flags:'r+', start:start }), (err) => { if (err) { reject(err);}  
 				(items[1]==jargs.nodeid) ? fs.unlink(jargs.chunkDir+items[2],err=>{ if (err) reject(err); resolve(); }) : axios.get(jargs.remotedel[items[1]]+"?chunkpath="+items[2]);
 				});
